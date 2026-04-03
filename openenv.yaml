@@ -1,0 +1,25 @@
+name: smart-content-feed
+
+entry_point: env.environment:AttentionEnv
+
+tasks:
+  - name: easy
+    factory: env.tasks:task_easy
+    grader: env.tasks:grade_easy
+
+  - name: medium
+    factory: env.tasks:task_medium
+    grader: env.tasks:grade_medium
+
+  - name: hard
+    factory: env.tasks:task_hard
+    grader: env.tasks:grade_hard
+
+observation:
+  type: Observation
+
+action:
+  type: Action
+
+reward:
+  type: Reward
