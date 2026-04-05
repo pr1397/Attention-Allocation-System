@@ -47,4 +47,4 @@ python -m scripts.run_single_episode
 # To train q learning
 python -m scripts.train_q_learning
 # To train Deep QN
-pythin -m scripts.train_dqn
+python -m scripts.train_dqn
