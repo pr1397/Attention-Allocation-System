@@ -2,3 +2,5 @@ numpy
 pydantic
 torch
 matplotlib
+openai
+python-dotenv
