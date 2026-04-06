@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "attention-allocation-system"
+version = "0.1.0"
+description = "Attention Allocation System using RL and LLM agents"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["."]

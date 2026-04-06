@@ -21,20 +21,22 @@ import textwrap
 from typing import List, Optional
 
 from openai import OpenAI
-
 from env.tasks import task_easy, task_medium, task_hard
 
-# we should remove this later, this is just for testing in our local env
-from dotenv import load_dotenv
-load_dotenv()
+# Safe local dev helper — silently ignored if dotenv isn't installed
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-API_KEY      = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
+API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN") or os.getenv("API_KEY")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
 MODEL_NAME   = os.getenv("MODEL_NAME",   "Qwen/Qwen2.5-72B-Instruct")
 BENCHMARK    = "attention_allocation"
-TEMPERATURE  = 0.2   # low = more consistent item picks
-MAX_TOKENS   = 64    # we only need a short JSON reply
+TEMPERATURE  = 0.2
+MAX_TOKENS   = 64
 
 # ── Logging helpers ────────────────────────────────────────────────────────────
 def log_start(task: str, env: str, model: str) -> None:
@@ -61,19 +63,26 @@ def log_end(success: bool, steps: int,
     )
 
 
-# ── Prompt builders ────────────────────────────────────────────────────────────
+# ── Prompts ────────────────────────────────────────────────────────────────────
 SYSTEM_PROMPT = textwrap.dedent("""
-    You are a smart content recommendation agent.
-    You will receive a user's profile and a list of available content items.
-    Your job is to pick ONE item that maximises long-term user satisfaction.
+    You are a content recommendation agent optimising for long-term user satisfaction.
 
-    Consider:
-    - Interest alignment (dot product of user interest_vector and item topic_vector)
-    - Content diversity (avoid picking items similar to recent ones)
-    - Item quality
-    - User fatigue (high fatigue = prefer shorter items)
+    The reward formula is:
+        reward = engagement + 0.6 * diversity + 0.3 * quality - 0.5 * fatigue
 
-    Reply with ONLY a JSON object, no explanation, no markdown, no extra text:
+    Where:
+        engagement = dot_product(user.interest_vector, item.topic_vector)
+        diversity  = 1 - dot_product(last_item.topic_vector, item.topic_vector)
+        quality    = item.quality
+        fatigue    = current user fatigue level
+
+    Important rules:
+    - Fatigue increases by (0.1 * item.length) after each pick. Session ends if fatigue > 1.2.
+    - Prefer shorter items when user fatigue is above 0.8.
+    - Avoid items with topic_vector similar to recently recommended items.
+    - High quality items are always a bonus.
+
+    Reply with ONLY a JSON object — no explanation, no markdown:
     {"item_id": <integer>}
 """).strip()
 
@@ -81,31 +90,28 @@ SYSTEM_PROMPT = textwrap.dedent("""
 def build_user_prompt(state, history_ids: List[int]) -> str:
     user = state.user
     items_desc = "\n".join(
-        f"  - id={item.id} "
-        f"topic={[round(v,2) for v in item.topic_vector]} "
-        f"quality={item.quality:.2f} "
-        f"length={item.length} "
-        f"novelty={item.novelty:.2f}"
+        f"  id={item.id}  topic={[round(v, 2) for v in item.topic_vector]}"
+        f"  quality={item.quality:.2f}  length={item.length}  novelty={item.novelty:.2f}"
         for item in state.items
     )
     return textwrap.dedent(f"""
-        User profile:
+        User state:
           interest_vector : {[round(v, 2) for v in user.interest_vector]}
-          fatigue         : {user.fatigue:.2f}
+          fatigue         : {user.fatigue:.2f}  (session ends if > 1.2)
           session_time    : {user.session_time}
 
-        Recently recommended item ids: {history_ids[-3:] if history_ids else 'none'}
+        Last 3 recommended item ids: {history_ids[-3:] if history_ids else 'none yet'}
 
         Available items:
         {items_desc}
 
-        Pick the best item_id. Reply ONLY with: {{"item_id": <integer>}}
+        Pick the item_id that maximises: engagement + 0.6*diversity + 0.3*quality - 0.5*fatigue
+        Reply ONLY with: {{"item_id": <integer>}}
     """).strip()
 
 
 # ── LLM call ──────────────────────────────────────────────────────────────────
 def get_llm_action(client: OpenAI, state, history_ids: List[int]) -> int:
-    """Ask the LLM to pick an item_id. Falls back to item 0 on any failure."""
     prompt = build_user_prompt(state, history_ids)
     try:
         response = client.chat.completions.create(
@@ -118,19 +124,15 @@ def get_llm_action(client: OpenAI, state, history_ids: List[int]) -> int:
             max_tokens=MAX_TOKENS,
         )
         raw = (response.choices[0].message.content or "").strip()
-
-        # Strip accidental markdown fences
         raw = raw.replace("```json", "").replace("```", "").strip()
 
         parsed = json.loads(raw)
         item_id = int(parsed["item_id"])
 
-        # Validate the id is actually available
         available_ids = [item.id for item in state.items]
         if item_id not in available_ids:
             print(f"[WARN] LLM chose invalid id={item_id}, "
-                  f"available={available_ids}. Falling back to first item.",
-                  flush=True)
+                  f"available={available_ids}. Falling back.", flush=True)
             item_id = available_ids[0]
 
         return item_id
@@ -142,11 +144,6 @@ def get_llm_action(client: OpenAI, state, history_ids: List[int]) -> int:
 
 # ── Episode runner ─────────────────────────────────────────────────────────────
 def run_episode(client: OpenAI, env, task_name: str, norm: float) -> float:
-    """
-    Runs one full episode with the LLM as the agent.
-    Emits [START], [STEP]*, [END] to stdout.
-    Returns the final normalised score in [0, 1].
-    """
     from env.models import Action
 
     log_start(task=task_name, env=BENCHMARK, model=MODEL_NAME)
@@ -167,21 +164,17 @@ def run_episode(client: OpenAI, env, task_name: str, norm: float) -> float:
             r = float(reward.value)
             rewards.append(r)
             history_ids.append(item_id)
-
             log_step(step=step, action=f"item_id={item_id}",
                      reward=r, done=done, error=None)
 
         except Exception as exc:
-            error_msg = str(exc)
-            log_step(step=step, action="null",
-                     reward=0.0, done=True, error=error_msg)
+            log_step(step=step, action="null", reward=0.0,
+                     done=True, error=str(exc))
             done = True
 
     total_reward = sum(rewards)
     score = min(1.0, max(0.0, total_reward / norm)) if norm > 0 else 0.0
-    success = score > 0.0
-
-    log_end(success=success, steps=step, score=score, rewards=rewards)
+    log_end(success=score > 0.0, steps=step, score=score, rewards=rewards)
     return score
 
 
@@ -202,9 +195,8 @@ def main():
         env = task_fn()
         score = run_episode(client, env, task_name, norm)
         all_scores[task_name] = score
-        print(flush=True)   # blank line between tasks
+        print(flush=True)
 
-    # Summary
     print("=" * 40, flush=True)
     print(f"{'Task':<10} {'Score':>6}", flush=True)
     print("-" * 40, flush=True)

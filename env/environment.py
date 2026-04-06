@@ -5,6 +5,7 @@ from .models import Observation, UserState, Item, Action, Reward
 class AttentionEnv:
 
     def __init__(self, num_items=10, num_topics=3, seed=42):
+        self.user = None
         self.num_items = num_items
         self.num_topics = num_topics
         self.seed = seed
