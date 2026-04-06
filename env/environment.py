@@ -24,6 +24,7 @@ class AttentionEnv:
         self.base_items = self._generate_items()
         self.items = self.base_items.copy()
         self.history = []
+        self.total_reward = 0.0
 
         return self.state()
 
@@ -70,6 +71,7 @@ class AttentionEnv:
 
         self.history.append(item)
         self.items.remove(item)
+        self.total_reward += float(reward_value)
 
         done = len(self.items) == 0 or user.fatigue > 1.2
 
