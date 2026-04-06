@@ -12,4 +12,4 @@ ENV HF_TOKEN=""
 
 EXPOSE 7860
 
-CMD ["python", "-c", "from server.app import main; main()"]
+CMD ["python", "-c", "from server.app import main; main()", "gradio_app.py"]
