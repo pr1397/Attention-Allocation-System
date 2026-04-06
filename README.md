@@ -168,3 +168,8 @@ The Space exposes a REST API compatible with the OpenEnv spec:
     ├── train_q_learning.py
     └── train_dqn.py
 ```
+
+## HF Spaces Deployment
+
+The environment is deployed on Hugging Face Spaces at:
+**https://huggingface.co/spaces/prashasti12/attention-env**
