@@ -103,6 +103,10 @@ python -m scripts.train_q_learning
 
 # Train DQN agent
 python -m scripts.train_dqn
+
+# Run pre validation scripts
+cd scripts
+./validate-submission.sh https://prashasti12-attention-env.hf.space/ path-to-allocation-system/attention-allocation-system
 ```
 
 ## Baseline scores
