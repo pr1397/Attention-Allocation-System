@@ -4,6 +4,7 @@ from agents.dqn_agent import dqn_agent, QNetwork
 from env.tasks import task_easy, task_medium, task_hard
 from agents.greedy_agent import greedy_agent
 from agents.q_learning_agent import q_learning_agent
+from agents.baseline_agent import llm_agent
 
 def run_episode(env, agent):
     state = env.reset()
@@ -32,6 +33,7 @@ def plot_results():
         ("Greedy", greedy_agent),
         ("Q-Learning", q_learning_agent),
         ("DQN", lambda state: dqn_agent(state, dqn_model)),
+        ("Baseline", llm_agent),
     ]
 
     results = {}
