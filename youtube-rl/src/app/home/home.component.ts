@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VideoCardComponent } from '../video-card/video-card.component';
 import { RecommendationService } from '../core/services/recommendation';
@@ -13,9 +13,9 @@ import { RecommendationService } from '../core/services/recommendation';
 export class HomeComponent {
 
   videos: any[] = [];
-  loading = false;
+  loading = false;// number of placeholders
 
-  constructor(private recService: RecommendationService) {}
+  constructor(private recService: RecommendationService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadFeed();
@@ -33,6 +33,7 @@ export class HomeComponent {
           console.log("LENGTH:", res?.length);
         this.videos = [...this.videos, ...res];
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
