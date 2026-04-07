@@ -4,13 +4,14 @@ compatible with the OpenEnv spec (reset / step / state endpoints),
 PLUS additional endpoints for a YouTube-style recommendation UI.
 """
 
+from env.environment import AttentionEnv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List
 import uvicorn
 import random
 from fastapi.middleware.cors import CORSMiddleware
-from env.environment import AttentionEnv
+
 from env.models import Action
 from agents.q_learning_agent import q_learning_agent,get_top_k_actions
 

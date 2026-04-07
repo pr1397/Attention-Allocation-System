@@ -1,13 +1,16 @@
-.container {
-  padding: 20px;
+/* Main container (Shorts scroll) */
+.shorts-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
 }
 
-h2 {
-  margin-bottom: 20px;
-}
+/* Each video section */
+.short {
+  height: 100vh;
+  scroll-snap-align: start;
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
 }

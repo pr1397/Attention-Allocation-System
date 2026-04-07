@@ -174,6 +174,8 @@ The Space exposes a REST API compatible with the OpenEnv spec:
     ├── plot_results.py
     ├── train_q_learning.py
     └── train_dqn.py
+└── server
+    └── app.py
 ```
 
 ## HF Spaces Deployment
