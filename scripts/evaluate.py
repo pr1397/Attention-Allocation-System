@@ -32,7 +32,7 @@ def evaluate():
         dqn_model.eval()
         print("[INFO] Loaded dqn_model.pth")
     except FileNotFoundError:
-        print("[WARN] dqn_model.pth not found — DQN using random weights")
+        print("[WARN] dqn_model.pth not found - DQN using random weights")
 
     tasks = [
         ("Easy",   task_easy,   4.0),

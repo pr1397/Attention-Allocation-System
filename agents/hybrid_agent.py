@@ -126,7 +126,7 @@ def hybrid_agent(state) -> Action:
     top3 = _llm_top3(state)
 
     if not Q:
-        # Q-table not trained yet — just use LLM's top pick
+        # Q-table not trained yet - just use LLM's top pick
         return Action(item_id=top3[0])
 
     best_id = _q_pick(state, top3)

@@ -1,5 +1,5 @@
 """
-HF Spaces server — exposes the AttentionEnv via a REST API
+HF Spaces server - exposes the AttentionEnv via a REST API
 that satisfies the OpenEnv spec (reset / step / state endpoints).
 
 The hackathon automated checker pings this Space URL and calls reset()
@@ -56,7 +56,7 @@ def root():
 
 @app.get("/health")
 def health():
-    """Hackathon automated ping endpoint — must return 200."""
+    """Hackathon automated ping endpoint - must return 200."""
     return {"status": "ok"}
 
 

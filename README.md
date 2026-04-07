@@ -49,9 +49,9 @@ Fatigue increases by `0.1 * item.length` each step. Session terminates if `fatig
 
 Three baseline agents are included for comparison:
 
-- **Greedy** — picks the item with highest interest alignment + quality score
-- **Q-Learning** — tabular RL agent trained over 2000 episodes
-- **DQN** — neural network Q-function trained with experience replay
+- **Greedy** - picks the item with highest interest alignment + quality score
+- **Q-Learning** - tabular RL agent trained over 2000 episodes
+- **DQN** - neural network Q-function trained with experience replay
 
 The inference script uses an **LLM** (via OpenAI-compatible API) as the agent.
 
@@ -107,6 +107,9 @@ python -m scripts.train_dqn
 # Run pre validation scripts
 cd scripts
 ./validate-submission.sh https://prashasti12-attention-env.hf.space/ path-to-allocation-system/attention-allocation-system
+
+# Run ui stats
+python -m gradio_app
 ```
 
 ## Baseline scores
@@ -137,15 +140,15 @@ The environment is deployed on Hugging Face Spaces at:
 **[ADD YOUR HF SPACE URL HERE]**
 
 The Space exposes a REST API compatible with the OpenEnv spec:
-- `POST /reset` — start a new episode
-- `POST /step` — take one action
-- `GET /state` — get current observation
+- `POST /reset` - start a new episode
+- `POST /step` - take one action
+- `GET /state` - get current observation
 
 ## Environment Variables
 
 | Variable      | Required | Default                           | Description               |
 |---------------|----------|-----------------------------------|---------------------------|
-| `HF_TOKEN`    | Yes      | —                                 | Hugging Face API key      |
+| `HF_TOKEN`    | Yes      | -                                 | Hugging Face API key      |
 | `API_BASE_URL`| No       | `https://router.huggingface.co/v1`| LLM endpoint              |
 | `MODEL_NAME`  | No       | `Qwen/Qwen2.5-72B-Instruct`       | Model to use for inference|
 

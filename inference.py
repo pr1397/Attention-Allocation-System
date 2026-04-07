@@ -1,5 +1,5 @@
 """
-Inference Script — Attention Allocation System
+Inference Script - Attention Allocation System
 ===============================================
 The LLM acts as the recommendation agent. Each step it receives
 the current user state and available items, then picks an item_id.
@@ -77,7 +77,7 @@ SYSTEM_PROMPT = textwrap.dedent("""
     - Session ENDS if fatigue exceeds 1.2. Fatigue += 0.1 * item.length per step.
     - When fatigue > 0.8, ONLY pick items where fatigue_after shows (safe).
     - Avoid topics similar to ANY item in full history.
-    - est_reward is pre-computed — just pick the highest value item marked (safe).
+    - est_reward is pre-computed - just pick the highest value item marked (safe).
 
     Reply with ONLY: {"item_id": <integer>}
 """).strip()
@@ -102,7 +102,7 @@ def build_user_prompt(state, history):
     history_str    = " → ".join(f"id={h['id']}" for h in history) if history else "none yet"
     fatigue_warn   = ""
     if user.fatigue > 0.8:
-        fatigue_warn = f"\n  *** URGENT: {user.fatigue:.2f}/1.2 — avoid ENDS SESSION items ***"
+        fatigue_warn = f"\n  *** URGENT: {user.fatigue:.2f}/1.2 - avoid ENDS SESSION items ***"
 
     return textwrap.dedent(f"""
         User state:

@@ -1,5 +1,5 @@
 """
-HF Spaces server — exposes the AttentionEnv via a REST API
+HF Spaces server - exposes the AttentionEnv via a REST API
 compatible with the OpenEnv spec (reset / step / state endpoints).
 """
 
@@ -40,7 +40,7 @@ def root():
 
 @app.get("/health")
 def health():
-    """Hackathon automated ping — must return 200."""
+    """Hackathon automated ping - must return 200."""
     return {"status": "ok"}
 
 

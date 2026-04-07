@@ -1,5 +1,5 @@
 """
-Gradio UI — Attention Allocation System
+Gradio UI - Attention Allocation System
 ========================================
 Run locally:   python gradio_app.py
 On HF Spaces:  imported automatically if you add `demo.launch()` at the bottom
@@ -130,7 +130,7 @@ def run_episode(agent_name: str, task_label: str):
 # ── Chart builders ────────────────────────────────────────────────────────────
 def _make_reward_chart(all_results: dict, task_label: str) -> Image.Image:
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    fig.suptitle(f"Agent Comparison — {task_label}", fontsize=13, fontweight="bold")
+    fig.suptitle(f"Agent Comparison - {task_label}", fontsize=13, fontweight="bold")
 
     # Left: per-step rewards
     ax = axes[0]
@@ -169,7 +169,7 @@ def _make_reward_chart(all_results: dict, task_label: str) -> Image.Image:
 
 def _make_fatigue_chart(all_results: dict, task_label: str) -> Image.Image:
     fig, ax = plt.subplots(figsize=(8, 3.5))
-    ax.set_title(f"Fatigue over time — {task_label}", fontsize=12)
+    ax.set_title(f"Fatigue over time - {task_label}", fontsize=12)
     for agent, (_, _, fatigues, _, _, _) in all_results.items():
         ax.plot(range(1, len(fatigues)+1), fatigues,
                 marker="s", label=agent, color=AGENT_COLORS.get(agent, "#888"),
@@ -236,7 +236,7 @@ def run_single(agent_name: str, task_label: str, progress=gr.Progress()):
 
     axes[0].bar(range(1, len(rewards)+1), rewards, color=color, alpha=0.8, edgecolor="white")
     axes[0].axhline(0, color="gray", linewidth=0.5, linestyle="--")
-    axes[0].set_title(f"{agent_name} — per-step rewards")
+    axes[0].set_title(f"{agent_name} - per-step rewards")
     axes[0].set_xlabel("Step"); axes[0].set_ylabel("Reward")
     axes[0].grid(True, axis="y", alpha=0.3)
 
@@ -274,7 +274,7 @@ with gr.Blocks(title="Attention Allocation System", theme=gr.themes.Soft()) as d
 
     gr.Markdown("""
     # Attention Allocation System
-    **Content recommendation RL environment** — compare how Greedy, Q-Learning, DQN, LLM, and Hybrid agents
+    **Content recommendation RL environment** - compare how Greedy, Q-Learning, DQN, LLM, and Hybrid agents
     manage user engagement, diversity, and fatigue across easy / medium / hard tasks.
     """)
 
@@ -352,8 +352,8 @@ with gr.Blocks(title="Attention Allocation System", theme=gr.themes.Soft()) as d
             | Agent | Strategy |
             |---|---|
             | Greedy | Picks highest engagement + quality, ignores diversity |
-            | Q-Learning | Tabular RL — learns state→action values from reward signals |
-            | DQN | Neural Q-network — generalises across continuous state space |
+            | Q-Learning | Tabular RL - learns state→action values from reward signals |
+            | DQN | Neural Q-network - generalises across continuous state space |
             | LLM | Uses an LLM to reason about each item (requires HF_TOKEN) |
             | Hybrid | LLM shortlists top-3 candidates, Q-Learning picks the best one |
 

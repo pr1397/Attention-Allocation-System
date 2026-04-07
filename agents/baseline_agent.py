@@ -11,7 +11,7 @@ try:
 except ImportError:
     pass
 
-# Uses the same free HuggingFace endpoint as inference.py — no payment needed
+# Uses the same free HuggingFace endpoint as inference.py - no payment needed
 client = OpenAI(
     api_key=os.getenv("HF_TOKEN") or os.getenv("API_KEY"),
     base_url=os.getenv("API_BASE_URL", "https://router.huggingface.co/v1"),
