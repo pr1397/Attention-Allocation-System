@@ -12,6 +12,7 @@ export class VideoPlayerComponent {
 
   video: any;
   startTime = 0;
+  feedbackSent = false;
 
   constructor(private recService: RecommendationService) {
     this.video = history.state.video;
@@ -22,6 +23,8 @@ export class VideoPlayerComponent {
   }
 
   onEnd() {
+    if (this.feedbackSent) return;
+
     const watchTime = (Date.now() - this.startTime) / 1000;
 
     this.recService.sendFeedback({
@@ -29,5 +32,19 @@ export class VideoPlayerComponent {
       action: 'watch',
       watch_time: watchTime
     }).subscribe();
+
+    this.feedbackSent = true;
+  }
+  
+  ngOnDestroy() {
+    const watchTime = (Date.now() - this.startTime) / 1000;
+
+    if (watchTime > 2) {
+      this.recService.sendFeedback({
+        video_id: this.video.id,
+        action: 'watch',
+        watch_time: watchTime
+      }).subscribe();
+    }
   }
 }

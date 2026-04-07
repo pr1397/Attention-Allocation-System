@@ -18,4 +18,12 @@ export class RecommendationService {
   sendFeedback(data: any) {
     return this.http.post(`${this.baseUrl}/feedback`, data);
   }
+
+  getAnalytics() {
+    return this.http.get<any[]>(`${this.baseUrl}/analytics`);
+  }
+
+  scroll() {
+    return this.http.post(`${this.baseUrl}/scroll`, {});
+  }
 }

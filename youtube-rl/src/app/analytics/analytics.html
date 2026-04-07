@@ -1,0 +1,51 @@
+<div class="analytics-container">
+
+  <h2>RL Analytics Dashboard</h2>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="card">
+      <h3>Accuracy</h3>
+      <p>{{ (accuracy * 100) | number:'1.0-2' }}%</p>
+    </div>
+
+    <div class="card">
+      <h3>Avg Reward</h3>
+      <p>{{ avgReward | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Skip Rate</h3>
+      <p>{{ (skipRate * 100) | number:'1.0-2' }}%</p>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-container">
+    <canvas #chartCanvas></canvas>
+  </div>
+
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Video ID</th>
+        <th>Action</th>
+        <th>Reward</th>
+        <th>Fatigue</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of data; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ item.video_id }}</td>
+        <td>{{ item.action }}</td>
+        <td>{{ item.reward }}</td>
+        <td>{{ item.fatigue | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
