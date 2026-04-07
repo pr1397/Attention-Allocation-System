@@ -4,7 +4,6 @@ from agents.greedy_agent import greedy_agent
 from agents.q_learning_agent import q_learning_agent
 from agents.baseline_agent import llm_agent         
 from env.tasks import task_easy, task_medium, task_hard
-from agents.hybrid_agent import hybrid_agent, load_q_table
 from agents.q_learning_agent import Q
 load_q_table(Q)  
 
@@ -45,7 +44,6 @@ def evaluate():
         ("LLM",         lambda state: llm_agent(state)),
         ("Q-Learning",  lambda state: q_learning_agent(state)),
         ("DQN",         lambda state: dqn_agent(state, dqn_model)),
-        ("Hybrid",      lambda state: hybrid_agent(state, dqn_model, Q)),
     ]
 
     for task_name, task_fn, norm in tasks:
