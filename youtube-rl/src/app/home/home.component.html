@@ -1,11 +1,41 @@
-<div class="shorts-container">
-  <div 
-    class="short" 
-    *ngFor="let video of videos">
+<div class="home-wrapper">
 
-    <app-video-card [video]="video"></app-video-card>
-
+  <!-- Session stats bar -->
+  <div class="session-bar">
+    <div class="stat">
+      <span class="stat-label">Session reward</span>
+      <span class="stat-value reward">{{ totalReward | number:'1.2-2' }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Fatigue</span>
+      <div class="fatigue-track">
+        <div class="fatigue-fill" [style.width.%]="(sessionFatigue / 1.2) * 100"
+             [class.warn]="sessionFatigue > 0.8"></div>
+      </div>
+      <span class="stat-value fatigue">{{ sessionFatigue | number:'1.2-2' }} / 1.2</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Video</span>
+      <span class="stat-value">{{ currentIndex + 1 }} / {{ videos.length }}</span>
+    </div>
   </div>
 
-  <p *ngIf="loading && videos.length === 0">Loading...</p>
+  <!-- Shorts scroll container -->
+  <div class="shorts-container" *ngIf="videos.length > 0">
+    <div class="short" *ngFor="let video of videos; let i = index">
+      <app-video-card
+        [video]="video"
+        [isActive]="i === currentIndex"
+        (action)="onVideoAction($event)"
+        (visible)="onIndexChange(i)">
+      </app-video-card>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-screen" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading recommendations...</p>
+  </div>
+
 </div>

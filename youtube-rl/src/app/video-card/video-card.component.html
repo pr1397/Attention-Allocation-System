@@ -1,4 +1,44 @@
-<div class="card">
-  <img [src]="video?.thumbnail" alt="thumbnail" />
-  <h4>{{ video?.title }}</h4>
+<div class="card" [class.active]="isActive">
+
+  <!-- Thumbnail -->
+  <img [src]="video.thumbnail" [alt]="video.title" class="thumb" />
+
+  <!-- Gradient overlay -->
+  <div class="overlay"></div>
+
+  <!-- RL score badge top-right -->
+  <div class="rl-badge" [style.color]="rewardColor">
+    <span class="badge-label">Quality</span>
+    <span class="badge-value">{{ (video.quality * 100).toFixed(0) }}%</span>
+  </div>
+
+  <!-- Category pill top-left -->
+  <div class="category-pill">{{ video.category }}</div>
+
+  <!-- Video info bottom -->
+  <div class="info">
+    <div class="channel-row">
+      <div class="avatar">{{ video.channel.charAt(0) }}</div>
+      <span class="channel">{{ video.channel }}</span>
+    </div>
+    <h4 class="title">{{ video.title }}</h4>
+    <div class="meta-row">
+      <span class="meta">{{ video.views }} views</span>
+      <span class="meta">{{ video.duration }}</span>
+      <span class="meta stars">{{ qualityStars }}</span>
+    </div>
+  </div>
+
+  <!-- Action buttons right side -->
+  <div class="actions">
+    <button class="action-btn" [class.active]="liked" (click)="onLike()">
+      <span class="action-icon">{{ liked ? '❤️' : '🤍' }}</span>
+      <span class="action-label">Like</span>
+    </button>
+    <button class="action-btn" (click)="onSkip()">
+      <span class="action-icon">⏭</span>
+      <span class="action-label">Skip</span>
+    </button>
+  </div>
+
 </div>

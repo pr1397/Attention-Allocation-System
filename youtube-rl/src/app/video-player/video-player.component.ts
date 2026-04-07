@@ -1,33 +1,21 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RecommendationService } from '../core/services/recommendation';
 
 @Component({
   selector: 'app-video-player',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './video-player.component.html'
+  template: `
+    <div style="padding:80px 24px;color:white;text-align:center">
+      <h2>Video Player</h2>
+      <p style="color:rgba(255,255,255,0.5)">Video ID: {{ videoId }}</p>
+    </div>
+  `
 })
 export class VideoPlayerComponent {
-
-  video: any;
-  startTime = 0;
-
-  constructor(private recService: RecommendationService) {
-    this.video = history.state.video;
-  }
-
-  ngOnInit() {
-    this.startTime = Date.now();
-  }
-
-  onEnd() {
-    const watchTime = (Date.now() - this.startTime) / 1000;
-
-    this.recService.sendFeedback({
-      video_id: this.video.id,
-      action: 'watch',
-      watch_time: watchTime
-    }).subscribe();
+  videoId: string | null = null;
+  constructor(private route: ActivatedRoute) {
+    this.videoId = this.route.snapshot.paramMap.get('id');
   }
 }

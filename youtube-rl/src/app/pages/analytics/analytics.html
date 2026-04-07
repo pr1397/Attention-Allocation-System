@@ -1,0 +1,134 @@
+<div class="analytics-page">
+
+  <div class="page-header">
+    <h1>Agent Analytics</h1>
+    <p class="subtitle">Compare how Greedy and Q-Learning perform across difficulty levels</p>
+    <button class="refresh-btn" (click)="loadAnalytics()" [disabled]="loading">
+      {{ loading ? 'Loading…' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- Error state -->
+  <div class="error-box" *ngIf="error">
+    <span>⚠</span> {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-box" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Running agents…</span>
+  </div>
+
+  <ng-container *ngIf="data && !loading">
+
+    <!-- Task tabs -->
+    <div class="task-tabs">
+      <button *ngFor="let t of tasks"
+              class="tab-btn"
+              [class.active]="selected === t"
+              (click)="selected = t">
+        {{ t | titlecase }}
+        <span class="winner-chip">{{ getBestAgent(t) }} wins</span>
+      </button>
+    </div>
+
+    <!-- Score cards -->
+    <div class="score-grid">
+      <div class="score-card" *ngFor="let a of agents">
+        <div class="score-agent" [style.color]="a.color">{{ a.label }}</div>
+        <div class="score-number">{{ getScore(selected, a.key) | number:'1.3-3' }}</div>
+        <div class="score-label">score</div>
+        <div class="score-bar-track">
+          <div class="score-bar-fill"
+               [style.width]="getBarWidth(selected, a.key)"
+               [style.background]="a.color">
+          </div>
+        </div>
+        <div class="score-meta">
+          {{ getResult(selected, a.key)?.steps_taken }} steps ·
+          {{ getResult(selected, a.key)?.total_reward | number:'1.2-2' }} reward
+        </div>
+      </div>
+    </div>
+
+    <!-- Cumulative reward chart (CSS bars) -->
+    <div class="chart-section">
+      <h2>Cumulative reward over steps</h2>
+      <div class="chart-area">
+        <div class="chart-legend">
+          <div class="legend-item" *ngFor="let a of agents">
+            <div class="legend-dot" [style.background]="a.color"></div>
+            {{ a.label }}
+          </div>
+        </div>
+        <div class="line-chart">
+          <div class="agent-line" *ngFor="let a of agents">
+            <div class="line-label" [style.color]="a.color">{{ a.label }}</div>
+            <div class="step-bars">
+              <div class="step-bar"
+                   *ngFor="let step of getSteps(selected, a.key)"
+                   [style.height]="rewardBarHeight(selected, a.key, step)"
+                   [style.background]="a.color"
+                   [title]="'Step ' + step.step + ': ' + step.cumulative">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-step table -->
+    <div class="table-section">
+      <h2>Step-by-step breakdown — {{ selected | titlecase }}</h2>
+      <div class="agent-tables">
+        <div class="agent-table" *ngFor="let a of agents">
+          <div class="table-header" [style.border-color]="a.color">
+            <span [style.color]="a.color">{{ a.label }}</span>
+            <span class="table-score">Score: {{ getScore(selected, a.key) | number:'1.3-3' }}</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Item</th>
+                <th>Reward</th>
+                <th>Fatigue</th>
+                <th>Cumulative</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let step of getSteps(selected, a.key)"
+                  [class.positive]="step.reward > 0"
+                  [class.negative]="step.reward < 0">
+                <td>{{ step.step }}</td>
+                <td>#{{ step.item_id }}</td>
+                <td class="reward-cell">
+                  {{ step.reward > 0 ? '+' : '' }}{{ step.reward | number:'1.2-2' }}
+                </td>
+                <td>
+                  <div class="fatigue-mini-bar">
+                    <div class="fatigue-mini-fill"
+                         [style.width.%]="(step.fatigue / 1.2) * 100"
+                         [class.danger]="step.fatigue > 0.9">
+                    </div>
+                  </div>
+                  {{ step.fatigue }}
+                </td>
+                <td>{{ step.cumulative | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reward formula reference -->
+    <div class="formula-box">
+      <h3>Reward formula</h3>
+      <code>reward = engagement + 0.6 × diversity + 0.3 × quality − 0.5 × fatigue</code>
+      <p>Session ends when fatigue exceeds 1.2 or all items are consumed.</p>
+    </div>
+
+  </ng-container>
+
+</div>

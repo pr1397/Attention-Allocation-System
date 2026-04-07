@@ -1,0 +1,345 @@
+.analytics-page {
+  padding: 80px 24px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: white;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+}
+
+.refresh-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refresh-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); }
+.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.error-box {
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 10px;
+  padding: 14px 18px;
+  color: #fca5a5;
+  font-size: 13px;
+  margin-bottom: 1.5rem;
+}
+
+.loading-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: #ff4444;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Task tabs */
+.task-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: capitalize;
+}
+
+.tab-btn.active {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  color: white;
+}
+
+.winner-chip {
+  font-size: 10px;
+  background: rgba(74,222,128,0.2);
+  color: #4ade80;
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+
+/* Score cards */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.score-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.score-agent {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.score-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+}
+
+.score-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 12px;
+}
+
+.score-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.score-meta {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* Chart section */
+.chart-section {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 2rem;
+}
+
+.chart-section h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.8);
+}
+
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.line-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.agent-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.line-label {
+  width: 90px;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.step-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 60px;
+  flex: 1;
+}
+
+.step-bar {
+  flex: 1;
+  min-width: 8px;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.85;
+  transition: height 0.4s;
+  cursor: help;
+}
+
+/* Table section */
+.table-section { margin-bottom: 2rem; }
+
+.table-section h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 14px;
+}
+
+.agent-tables {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.agent-table {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 2px solid;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.table-score {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th {
+  padding: 7px 10px;
+  text-align: left;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255,255,255,0.03);
+}
+
+td {
+  padding: 6px 10px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.75);
+}
+
+tr.positive .reward-cell { color: #4ade80; }
+tr.negative .reward-cell { color: #f87171; }
+
+.fatigue-mini-bar {
+  display: inline-block;
+  width: 36px;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.fatigue-mini-fill {
+  height: 100%;
+  background: #4ade80;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.fatigue-mini-fill.danger { background: #ef4444; }
+
+/* Formula box */
+.formula-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.formula-box h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: rgba(255,255,255,0.7);
+}
+
+.formula-box code {
+  display: block;
+  font-family: 'Fira Code', monospace;
+  font-size: 13px;
+  color: #4ade80;
+  margin-bottom: 8px;
+}
+
+.formula-box p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+
+@media (max-width: 768px) {
+  .score-grid, .agent-tables { grid-template-columns: 1fr; }
+  .task-tabs { flex-wrap: wrap; }
+}
