@@ -4,7 +4,7 @@ from .models import Observation, UserState, Item, Action, Reward
 
 class AttentionEnv:
 
-    def __init__(self, num_items=10, num_topics=3, seed=42):
+    def __init__(self, num_items=50, num_topics=5, seed=42):
         self.user = None
         self.num_items = num_items
         self.num_topics = num_topics
@@ -24,11 +24,19 @@ class AttentionEnv:
         self.base_items = self._generate_items()
         self.items = self.base_items.copy()
         self.history = []
+        self.last_action = None
 
         return self.state()
 
     def state(self) -> Observation:
         return Observation(user=self.user, items=self.items)
+
+    def get_rl_state(self):
+        return (
+            tuple(np.round(self.user.interest_vector, 2)),
+            round(self.user.fatigue, 2),
+            self.last_action if self.last_action is not None else -1
+        )
 
     def _generate_items(self):
         return [
@@ -69,8 +77,7 @@ class AttentionEnv:
         user.session_time += 1
 
         self.history.append(item)
-        self.items.remove(item)
-
-        done = len(self.items) == 0 or user.fatigue > 1.2
+        self.last_action = item.id
+        done = user.fatigue > 2.0
 
         return self.state(), Reward(value=float(reward_value)), done, {}

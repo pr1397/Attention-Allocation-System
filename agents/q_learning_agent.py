@@ -16,3 +16,11 @@ def q_learning_agent(state):
 
     best_idx = np.argmax(values)
     return Action(item_id=state.items[best_idx].id)
+
+def get_top_k_actions(self, state, k=10):
+    q_values = self.get_q_values(state)
+
+    # sort by Q value
+    sorted_actions = sorted(q_values, key=q_values.get, reverse=True)
+
+    return sorted_actions[:k]
