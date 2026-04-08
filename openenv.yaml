@@ -17,6 +17,9 @@ tasks:
 
 observation:
   type: Observation
+  description: >
+    User interest across 3 topics: Technology, Entertainment, Education.
+    Items are content pieces with topic alignment, quality, novelty, and length.
 
 action:
   type: Action

@@ -45,6 +45,8 @@ class AttentionEnv:
     def step(self, action: Action):
         item = next(x for x in self.items if x.id == action.item_id)
         user = self.user
+        if item is None:
+            raise ValueError(f"item_id={action.item_id} not in available items {[x.id for x in self.items]}")
 
         # Engagement
         engagement = np.dot(user.interest_vector, item.topic_vector)
